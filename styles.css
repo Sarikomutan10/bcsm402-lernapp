@@ -205,6 +205,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .page-map div { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); }
 .toast { position: fixed; right: 22px; bottom: 22px; transform: translateY(20px); opacity: 0; background: var(--ink); color: white; padding: 12px 16px; border-radius: 12px; z-index: 50; transition: .25s; pointer-events: none; }
 .toast.show { opacity: 1; transform: none; }
+.pdf-viewer { position: fixed; inset: 0; z-index: 100; background: var(--paper); display: grid; grid-template-rows: auto 1fr; }
+.pdf-viewer-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: var(--card); border-bottom: 1px solid var(--line); box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+.pdf-frame { width: 100%; height: 100%; border: 0; background: white; }
 .mobile-nav { display: none; }
 .empty { text-align: center; padding: 50px; color: var(--muted); }
 .muted { color: var(--muted); }
@@ -246,6 +249,9 @@ body.dark .notes { background: #122c2f; color: var(--ink); }
   .manage-grid { grid-template-columns: 1fr; }
   .progress-card { min-height: 280px; }
   .source-card { overflow: hidden; }
+  .pdf-viewer-bar { align-items: flex-start; flex-direction: column; }
+  .pdf-viewer-bar .button-row { width: 100%; }
+  .pdf-viewer-bar .btn { flex: 1; justify-content: center; }
 }
 @media (max-width: 460px) {
   .view, .topbar { padding-left: 16px; padding-right: 16px; }

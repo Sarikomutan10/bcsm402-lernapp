@@ -3,7 +3,7 @@
   const defaultState = {
     route: "dashboard", theme: "light", completedSections: [], cardProgress: {},
     quizStats: { answered: 0, correct: 0, exams: 0 }, exerciseNotes: {}, completedExercises: [],
-    streak: { last: null, days: 0 }, activeChapter: null, activeExercise: null,
+    streak: { last: null, days: 0 }, activeChapter: null, activeExercise: null, activePdfPage: null,
     custom: { chapters: [], cards: [], questions: [], exercises: [] }
   };
   let state = loadState();
@@ -12,7 +12,7 @@
   let cardFlipped = false;
   let quizSession = null;
   let glossaryTerm = "";
-  const PDF_URL = "https://raw.githubusercontent.com/Sarikomutan10/bcsm402-lernapp/main/assets/alles_zu_402.pdf";
+  const PDF_URL = "assets/alles_zu_402.pdf";
 
   const view = document.getElementById("view");
   const pageTitle = document.getElementById("page-title");
@@ -28,7 +28,9 @@
     return page ? `${PDF_URL}#page=${encodeURIComponent(page)}` : PDF_URL;
   }
   function openPdf(page) {
-    window.open(pdfHref(page), "_blank", "noopener");
+    state.activePdfPage = page || "1";
+    saveState();
+    render();
   }
   function today() { return new Date().toISOString().slice(0, 10); }
   function addDays(n) { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); }
@@ -78,6 +80,7 @@
   function navigate(route) {
     state.route = route; state.activeChapter = route === "learn" ? state.activeChapter : null;
     state.activeExercise = route === "exercises" ? state.activeExercise : null;
+    state.activePdfPage = null;
     saveState(); render(); window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -88,7 +91,23 @@
     document.querySelectorAll("[data-route]").forEach(b => b.classList.toggle("active", b.dataset.route === state.route));
     const renders = { dashboard: renderDashboard, learn: renderLearn, cards: renderCards, quiz: renderQuiz, exercises: renderExercises, case: renderCase, glossary: renderGlossary, source: renderSource, manage: renderManage };
     view.innerHTML = (renders[state.route] || renderDashboard)();
+    document.getElementById("pdf-viewer")?.remove();
+    if (state.activePdfPage) document.body.insertAdjacentHTML("beforeend", renderPdfViewer(state.activePdfPage));
     updateStreakUI();
+  }
+
+  function renderPdfViewer(page) {
+    const src = pdfHref(page);
+    return `<div class="pdf-viewer" id="pdf-viewer" role="dialog" aria-label="Originalfolien">
+      <div class="pdf-viewer-bar">
+        <div><span class="pill">Originalfolien</span><strong> Seite ${esc(String(page))}</strong></div>
+        <div class="button-row">
+          <a class="btn btn-secondary" href="${src}" target="_blank" rel="noopener">Falls nötig extern öffnen</a>
+          <button class="btn btn-primary" data-close-pdf>Zurück zur App</button>
+        </div>
+      </div>
+      <iframe class="pdf-frame" src="${src}" title="alles_zu_402.pdf Seite ${esc(String(page))}"></iframe>
+    </div>`;
   }
 
   function renderDashboard() {
@@ -271,6 +290,7 @@
     if (pdfLink) { e.preventDefault(); openPdf(); return; }
     const routeBtn = e.target.closest("[data-route]");
     if (routeBtn) { navigate(routeBtn.dataset.route); return; }
+    if (e.target.closest("[data-close-pdf]")) { state.activePdfPage = null; saveState(); render(); return; }
     const chapterBtn = e.target.closest("[data-open-chapter], [data-go-chapter]");
     if (chapterBtn) { state.route = "learn"; state.activeChapter = Number(chapterBtn.dataset.openChapter ?? chapterBtn.dataset.goChapter); saveState(); render(); return; }
     if (e.target.closest("[data-back-learn]")) { state.activeChapter = null; saveState(); render(); return; }

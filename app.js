@@ -12,6 +12,7 @@
   let cardFlipped = false;
   let quizSession = null;
   let glossaryTerm = "";
+  const PDF_URL = "https://raw.githubusercontent.com/Sarikomutan10/bcsm402-lernapp/main/assets/alles_zu_402.pdf";
 
   const view = document.getElementById("view");
   const pageTitle = document.getElementById("page-title");
@@ -23,6 +24,12 @@
     catch { return { ...defaultState }; }
   }
   function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); updateStreakUI(); }
+  function pdfHref(page) {
+    return page ? `${PDF_URL}#page=${encodeURIComponent(page)}` : PDF_URL;
+  }
+  function openPdf(page) {
+    window.open(pdfHref(page), "_blank", "noopener");
+  }
   function today() { return new Date().toISOString().slice(0, 10); }
   function addDays(n) { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); }
   function touchActivity() {
@@ -260,6 +267,8 @@
   }
 
   document.addEventListener("click", e => {
+    const pdfLink = e.target.closest('a[href="assets/alles_zu_402.pdf"]');
+    if (pdfLink) { e.preventDefault(); openPdf(); return; }
     const routeBtn = e.target.closest("[data-route]");
     if (routeBtn) { navigate(routeBtn.dataset.route); return; }
     const chapterBtn = e.target.closest("[data-open-chapter], [data-go-chapter]");
@@ -319,7 +328,7 @@
     const sol = e.target.closest("[data-show-solution]");
     if (sol) { const id=Number(sol.dataset.showSolution), item=exercises().find(x=>x.id===id), box=document.getElementById(`solution-${id}`); if(box) box.innerHTML=`<div class="solution"><strong>Musterweg</strong><p>${item.solution}</p><small>Es sind auch andere begründete Lösungen möglich.</small></div>`; return; }
     const pdf = e.target.closest("[data-open-pdf]");
-    if (pdf) { window.open(`assets/alles_zu_402.pdf#page=${pdf.dataset.openPdf}`, "_blank"); return; }
+    if (pdf) { openPdf(pdf.dataset.openPdf); return; }
     if (e.target.closest("#export-progress") || e.target.closest("#export-progress-inline")) { exportProgress(); return; }
     if (e.target.closest("#export-content")) { exportContent(); return; }
     const del = e.target.closest("[data-delete-custom]");

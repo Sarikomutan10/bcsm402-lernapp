@@ -325,3 +325,135 @@ BCSM_DATA.questions.push(...[
   [7,"Welche Grundsätze gelten für Krisenkommunikation?",["Früh beginnen","Wahr und abgestimmt kommunizieren","Zielgruppen berücksichtigen","Unbestätigte Vermutungen als Fakten senden"],[0,1,2],"Spekulationen gefährden Vertrauen und Lagebeherrschung."],
   [7,"Welche Schritte gehören zu FOR-DEC?",["Facts","Options","Risks & Benefits","Decision, Execution und Check"],[0,1,2,3],"FOR-DEC strukturiert die gesamte Entscheidung von der Faktenlage bis zur Wirksamkeitskontrolle."]
 ].map((x,i)=>({id:BCSM_DATA.questions.length+i+1,chapter:x[0],q:x[1],options:x[2],correct:x[3],explanation:x[4],type:"multiple"})));
+
+/* Prüfungsupdate aus dem neuen SSD-Ordner: Prof-Eingrenzung vom 14.07.2026,
+   neue Übungen 6-9, Probeklausur und getrennt gekennzeichnete Kollegen-Übungsklausuren. */
+Object.assign(BCSM_DATA.chapters.find(c => c.id === 8), {
+  supplemental: false,
+  pages: "Kapitel_8.pdf",
+  pdf: "Kapitel_8.pdf",
+  pdfPage: 1,
+  short: "Zertifizierungsaudit, Auditarten, Stage I/II, Bericht und Nichtkonformitäten",
+  objectives: ["Auditarten sicher unterscheiden", "Stage I und Stage II erklären", "Nichtkonformitäten mit Anforderung, Abweichung und Nachweis formulieren", "Korrekturmaßnahmen und Wirksamkeitsprüfung begründen"],
+  sections: [
+    {title:"Warum Zertifizierung?",body:"Eine ISO-22301-Zertifizierung zeigt nach außen, dass ein BCMS nicht nur geplant, sondern nach Anforderungen aufgebaut, betrieben und überprüft wird. Für die Prüfung ist wichtig: Zertifiziert wird gegen ISO 22301; BSI 200-4 ist eine Methodik und kein eigenes ISO-Zertifikat.",bullets:["Zertifizierung schafft Vertrauen bei Kunden, Mutterkonzern und Partnern","Voraussetzung sind gelenkte Dokumente, gelebte Prozesse und Nachweise","Nicht das schöne Handbuch zählt allein, sondern nachweisbare Wirksamkeit"],takeaway:"Merksatz: ISO 22301 = prüfbare Anforderungen; Audit = Nachweise gegen Anforderungen."},
+    {title:"Auditarten",body:"Audits können nach Beziehung zwischen Auditor und Organisation unterschieden werden.",bullets:["1st Party: internes Audit der eigenen Organisation","2nd Party: Audit durch Kunden, Partner oder Auftraggeber","3rd Party: unabhängige Zertifizierungsstelle","Internes Audit braucht Unabhängigkeit vom geprüften Bereich"]},
+    {title:"Stage I und Stage II",body:"Beim Zertifizierungsaudit prüft Stage I vor allem Dokumentation, Scope und Zertifizierungsbereitschaft. Stage II prüft vor Ort beziehungsweise anhand von Interviews, Stichproben und Nachweisen, ob das BCMS umgesetzt und wirksam ist.",bullets:["Stage I: Dokumentenreview, Reife, Auditplanung","Stage II: gelebte Praxis, Interviews, Beobachtung, Nachweise","Methoden: Dokumentenprüfung, Interviews, Begehung, Stichproben, Aufzeichnungsprüfung"],takeaway:"Stage I fragt: Ist das System auditbereit? Stage II fragt: Funktioniert es wirklich?"},
+    {title:"Nichtkonformitäten",body:"Eine belastbare Nichtkonformität besteht aus drei Elementen: Anforderung, tatsächliche Abweichung und objektiver Nachweis. Danach folgen Ursachenanalyse, Korrekturmaßnahme, Owner, Termin und Wirksamkeitsprüfung.",bullets:["Major: zentrales Systemelement fehlt oder wirkt nicht","Minor: einzelne, begrenzte Abweichung ohne systemisches Versagen","Beobachtung: Hinweis auf mögliche Verbesserung, noch keine Abweichung","Korrektur behebt den Fehler; Korrekturmaßnahme behebt die Ursache"]},
+    {title:"Auditplan für NGA",body:"Bei NGA sind besonders ISO 22301 7.2 Competence, 7.3 Awareness und 8.5 Exercise Programme prüfungsrelevant. Typische Interviewpartner sind BCM Manager und Ralf Dickel als Produktionsleiter/Notfallteam-Rolle.",bullets:["Frage nach Kompetenznachweisen und Schulungen","Frage nach Awareness-Inhalten und Zielgruppen","Frage nach Übungsprogramm, Übungszielen, Protokollen und Lessons Learned","Ohne Ausdrucke: gezielt Nachweise anfordern und Interviews nutzen"]}
+  ]
+});
+
+Object.assign(BCSM_DATA.chapters.find(c => c.id === 9), {
+  supplemental: false,
+  pages: "Kapitel_9.pdf",
+  pdf: "Kapitel_9.pdf",
+  pdfPage: 1,
+  short: "ITSCM, Kritikalitätsanalyse, IT-Notfallvorsorge und IT-Notfallbewältigung",
+  objectives: ["BCM und ITSCM trennen", "ITSCM-Kritikalitätsanalyse erklären", "IT-Notfallvorsorge und IT-Notfallbewältigung unterscheiden", "RTO/RPO fachlich in IT-Anforderungen übersetzen"],
+  sections: [
+    {title:"Abgrenzung ITSCM und BCM",body:"BCM betrachtet die Fortführung kritischer Geschäftsprozesse. ITSCM betrachtet die dafür notwendigen IT-Services, Infrastruktur, Daten, Anwendungen, Netze, Identitäten und Provider. ITSCM ist damit Teil des BCM, aber kein Ersatz für BCM.",bullets:["BCM = Business-Prozesse und Organisation","ITSCM = technische Kontinuität der benötigten IT-Services","BIA gibt fachliche RTO/RPO/MBCO vor","IT muss zeigen, dass Services diese Ziele technisch erreichen können"],takeaway:"Die Fachseite sagt, wie kritisch ein Prozess ist; ITSCM übersetzt das in Service-Recovery."},
+    {title:"ITSCM-Kritikalitätsanalyse",body:"Die Kritikalitätsanalyse wird bei neuen, geänderten, ersetzten oder zurückgebauten IT-Services relevant. Sie nimmt fachliche BIA-Anforderungen auf, prüft Abhängigkeiten und ordnet IT-Services Kritikalitätsklassen zu.",bullets:["Auslöser: neuer IT-Service, geänderte RTO-Anforderung, Ersatz oder Rückbau","Fachbezogene und unterstützende IT-Services identifizieren","Sequenzielle und parallele Abhängigkeiten berücksichtigen","Abweichungen zur BIA dokumentieren und melden"]},
+    {title:"IT-Notfallvorsorge",body:"Vorsorge umfasst alles, was vor dem Ereignis vorbereitet wird: Strategien, Notfalldokumente, technische Architektur, Training, Tests und Beseitigung erkannter Lücken.",bullets:["Kritikalitätsanalyse und Service-Mapping","Backup, Replikation, Redundanz, Ausweichumgebung","Runbooks, Kontaktlisten und Priorisierung","Tests, Übungen, Gap Remediation und kontinuierliche Verbesserung"]},
+    {title:"IT-Notfallbewältigung",body:"Bewältigung ist die Reaktion im Ereignis. Ziel ist Schadensminderung, operative Handlungsfähigkeit und koordinierter Wiederanlauf der priorisierten IT-Services.",bullets:["Erkennen, alarmieren, eskalieren","IT-verantwortende Einheiten koordinieren","Systeme isolieren, Datenintegrität prüfen, Wiederanlauf starten","RTO/RPO messen und Lessons Learned dokumentieren"]},
+    {title:"Typische ITSCM-Szenarien",body:"Prüfungsnahe Beispiele sind DDoS, Stromausfall, Konsistenzverlust, Ransomware, Provider-Ausfall oder Ausfall kritischer Infrastruktur. Wichtig ist, immer Auswirkung, Abhängigkeit und Wiederherstellbarkeit zu begründen.",bullets:["Backup allein reicht nicht","Online-Backups können bei Ransomware kompromittiert sein","Provider-SLAs müssen zum Prozess-RTO passen","Ende-zu-Ende-Test beweist Nutzbarkeit für den Fachprozess"]}
+  ]
+});
+
+BCSM_DATA.examFocus = {
+  title: "BCSM 402 Prüfungs-Rettungsplan",
+  subtitle: "Fokus auf die Prof-Eingrenzung, neue Übungen und die echte Klausurlogik: 20 Single-Choice, 5 Freitext, Case Study. Ziel: bestehen, dann Punkte sammeln.",
+  examStructure: [
+    {part:"Prüfungsabschnitt 1: 20 Single-Choice-Fragen", points:"40 P.", note:"Genau eine Antwort; mehrere Markierungen = 0 Punkte."},
+    {part:"Prüfungsabschnitt 2: 5 Freitextaufgaben", points:"40 P.", note:"Kurze, strukturierte Antworten mit Begriffen, Reihenfolgen und Begründung."},
+    {part:"Prüfungsabschnitt 3: Case Study", points:"40 P.", note:"Transfer auf NGA/MagicBox: Scope, BIA, Risiko, Strategie, Krise, ITSCM."},
+    {part:"Bestehensgrenze laut Deckblatt", points:"61 P.", note:"Du brauchst nicht Perfektion, sondern sichere Standardpunkte plus Falllogik."}
+  ],
+  redList: [
+    "MTPD/RTO/RPO/MBCO verwechseln",
+    "BIA und Risikoanalyse vermischen",
+    "Stage I und Stage II beim Audit vertauschen",
+    "RASCI mit mehreren Accountable-Rollen pro Aufgabe",
+    "Scope ohne organisatorisch/geografisch/logische Abgrenzung",
+    "ITSCM als Ersatz für BCM erklären statt als Teilbereich",
+    "FOR-DEC-Reihenfolge nicht können",
+    "Nichtkonformität ohne Anforderung + Abweichung + Nachweis formulieren"
+  ],
+  fourDayPlan: [
+    {day:1,title:"Grundgerüst sichern",goal:"Kapitel 1-3 so lernen, dass du MC und kurze Freitexte sicher triffst.",blocks:["Begriffe: BC, BCM, BCMS, Resilienz, MTPD, RTO, RPO, MBCO","ISO 22301 vs. BSI 200-4 vs. BCI GPG","Scope-Dimensionen und Stakeholder","Governance, Leitlinie, BCB, RASCI","Am Ende: 30 Karteikarten + 20 Quizfragen"]},
+    {day:2,title:"Methoden können",goal:"BIA und Risikomanagement prüfungsreif anwenden.",blocks:["BIA-Ziel, Voranalyse, Durchführung, Bericht","BIA vs. Risikoanalyse laut Merksatz: Folgen vs. Ursachen","NGA-Rechnung: 6 PKW/h x 20.000 EUR","Risiko: Bedrohung, Schwachstelle, Risiko, Auswirkung, Wahrscheinlichkeit, Maßnahme","Übung 5 und Übung 6 bearbeiten"]},
+    {day:3,title:"Betrieb, Krise, Audit, ITSCM",goal:"Die späten Kapitel 6-9 punktereif machen.",blocks:["Notfallplan-Mindestinhalte und BC-Strategien","KPIs: Zweck, Messobjekt, Messung, Datenquelle, Interpretation, Reporting, Frequenz","FOR-DEC + AAO/BAO/BOS + Störung/Notfall/Krise","Auditarten, Stage I/II, Nichtkonformitäten","ITSCM-Kritikalitätsanalyse, Vorsorge und Bewältigung"]},
+    {day:4,title:"Simulation und Lücken schließen",goal:"Nicht mehr alles lesen, sondern abrufen und schreiben.",blocks:["Probeklausur bearbeiten","20-Fragen-Simulation in der App","Eine Freitextantwort pro Hauptthema schreiben","Case Study einmal komplett: Scope -> BIA -> Risiko -> Strategie -> Plan","Nur rote Fehlerliste wiederholen"]}
+  ],
+  topics: [
+    {chapter:1,title:"Grundlagen BCM",items:["Praxisbeispiele und Schadensszenarien","Rechtliche Anforderungen","ISO 22301 und BSI 100-4/200-4","BCMS-Strukturelemente und relevante Dokumente","MTPD, RTO, RPO, MBCO","Vorteile von BCM"]},
+    {chapter:2,title:"Standards & Scope",items:["Entstehung und Relevanz von BCM-Standards","BSI 100-4/200-4: Struktur, Inhalte, Stufenmodell","ISO 22301 als internationaler Standard","BCI Good Practice Guidelines","Anwendungsbereich des BCMS"]},
+    {chapter:3,title:"Rollen & Governance",items:["Top Management: Leitlinie unterschreiben, Commitment, Ressourcen","BCM-Leitlinie und Governance","Dokumentation","RASCI-Methode","Risiken und Chancen im BCMS","Zielformulierung, Zielerreichung, Änderungen, Ressourcen"]},
+    {chapter:4,title:"Business Impact Analyse",items:["Voranalyse","Verfahren für BIA und Risikoanalyse","Ziele und Definition der BIA","Durchführung der BIA","BIA-Bericht und Dokumentation"]},
+    {chapter:5,title:"BCM-Risikomanagement",items:["Abgrenzung BCM-Risikomanagement","Ansatz","Risikoidentifikation und Analyse","Risikobewertung und Beurteilung","Risikominimierung und Kontrolle","Dokumentation"]},
+    {chapter:6,title:"Betrieb & Verbesserung",items:["Kontinuität des Geschäftsbetriebs","Maßnahmen für Kontinuität","Leistungsüberprüfung und Kennzahlen"]},
+    {chapter:7,title:"Krisenmanagement",items:["AAO, BAO, BOS","BSI-Standards","Ablauf Krisenmanagement","FOR-DEC-Methode"]},
+    {chapter:8,title:"Zertifizierung & Auditierung",items:["Einleitung Zertifizierung","Auditarten: extern, intern, 1st/2nd/3rd Party","Stage I und Stage II","Berichterstattung","Nichtkonformitäten"]},
+    {chapter:9,title:"ITSCM",items:["Praxisbeispiele","Abgrenzung ITSCM und BCM","Managementsystem und ITSCM-Standards","ITSCM in der Organisation","Life Cycle und Kritikalitätsanalyse","IT-Notfallvorsorge und IT-Notfallbewältigung"]}
+  ],
+  officialExercises: [
+    {id:6, appExerciseId:13, title:"BCM-Risikomanagement", file:"Übung_6.pdf", focus:"Montage/Ressourcen: IT, Gebäude, Mitarbeitende, Zulieferer brutto bewerten."},
+    {id:7, appExerciseId:14, title:"Business Continuity Strategie", file:"Übung_7.pdf", focus:"Notfallplan-Inhalte für NGA anhand Template ableiten."},
+    {id:8, appExerciseId:15, title:"Effektivität des BCMS messen", file:"Übung_8.pdf", focus:"Zwei Kennzahlen sauber mit Zweck, Messung, Quelle, Reporting und Frequenz ausfüllen."},
+    {id:9, appExerciseId:16, title:"Auditplan", file:"Übung_9.pdf", focus:"ISO 22301 7.2, 7.3, 8.5: Auditplan + Fragenkatalog für BCM Manager und Ralf Dickel."}
+  ]
+};
+
+BCSM_DATA.sourceFiles = [
+  {title:"Prof-Themeneingrenzung", file:"EingrenzungThemen-2.pdf", badge:"2 Seiten"},
+  {title:"Deckblatt/Klausurstruktur", file:"Fragestunde-Klausur_Deckblatt.pdf", badge:"120 Punkte"},
+  {title:"Prof-Probeklausur", file:"Probeklausur.pdf", badge:"5 Seiten"},
+  {title:"Prüfungsrelevante Vorlesungsseiten", file:"Prüfungsrelevante_Vorlesungsseiten.pdf", badge:"244 Seiten"},
+  {title:"Übung 6 Risikomanagement", file:"Übung_6.pdf", badge:"offiziell"},
+  {title:"Übung 7 BC-Strategie", file:"Übung_7.pdf", badge:"offiziell"},
+  {title:"Übung 8 KPIs", file:"Übung_8.pdf", badge:"offiziell"},
+  {title:"Übung 9 Auditplan", file:"Übung_9.pdf", badge:"offiziell"}
+];
+
+BCSM_DATA.exercises.push(
+  {id:13, original:true, official:true, title:"Übung 06: BCM-Risikomanagement", pages:"Übung_6.pdf", duration:45, chapter:5,
+    task:"Führe für Prozess 3 „Zusammenbau/Montage des PKW“ eine Brutto-Risikobewertung durch. Bewerte die Szenarien Ausfall IT, Ausfall Gebäude, Ausfall Mitarbeitende und Ausfall Zulieferer mit Bedrohung, Schwachstelle, Risiko, Auswirkung, Wahrscheinlichkeit, Risikostufe und Maßnahmen.",
+    hints:["Brutto heißt: vorhandene Maßnahmen noch nicht anrechnen.","Nutze die NGA-Skala: niedrig bis 400.000 EUR, mittel ab 400.000 EUR, hoch ab 2 Mio. EUR, sehr hoch ab 4 Mio. EUR.","Formuliere Risiko als Wenn-dann-Zusammenhang."],
+    solution:"IT: Bedrohung Cyberangriff/Störung IT-4all; Schwachstelle Abhängigkeit von Produktions-IT und ggf. ungetesteter Wiederanlauf; Risiko Stillstand Montage; Auswirkung hoch/sehr hoch je Dauer; Maßnahmen SLA, Wiederanlauftest, Segmentierung, Offline-Backup, Notbetrieb. Gebäude: Bedrohung Brand/Chemieunfall; Schwachstelle einzelner Fertigungsstandort; Risiko Produktionsstillstand; Maßnahmen Brandschutz, Evakuierung, Ausweichkapazität, Liefer-/Kundenpriorisierung. Mitarbeitende: Bedrohung Pandemie/Streik; Schwachstelle Schlüsselwissen/Mindestbesetzung; Risiko Montage kann nicht betrieben werden; Maßnahmen Vertretung, Cross-Training, Schichtplanung. Zulieferer: Bedrohung Hochwasser/Insolvenz/Streik; Schwachstelle BuCa/ACT je 50 Prozent, keine dritte Quelle; Risiko Materialmangel stoppt Band; Maßnahmen Dual-/Multi-Sourcing, Sicherheitsbestand, Lieferanten-BCM, Vertragsklauseln."},
+  {id:14, original:true, official:true, title:"Übung 07: Business Continuity Strategie", pages:"Übung_7.pdf", duration:35, chapter:6,
+    task:"Lies das Template Notfallplan und überlege erste Inhalte für NGA. Fokus: Notfallpläne für Ausfall Mitarbeitende, Gebäudeausfall, Ausfall IT und Dienstleisterausfall; Prozesse mit ähnlichen Ressourcen/RTO/Abhängigkeiten können gebündelt werden.",
+    hints:["Notfallplan = konkrete Handlungsanweisung, kein Theorieaufsatz.","Geltungsbereich kann mehrere Prozesse bündeln.","Denke von Aktivierung bis Rückführung."],
+    solution:"Ein guter NGA-Notfallplan enthält: Zweck und Geltungsbereich, betroffene Prozesse/Ressourcen, Aktivierungs- und Eskalationskriterien, Rollen und Stellvertretungen, Kontaktlisten, Sofortmaßnahmen, Kommunikation, Notbetrieb/Mindestbesetzung, Wiederanlaufreihenfolge, benötigte Ressourcen, Schnittstellen zu IT-4all/Lieferanten, Dokumentation, Deaktivierung, Rückführung und Lessons Learned. Für IT-Ausfall: Produktions-IT isolieren, IT-4all/Elsa Dohn alarmieren, Datenstand prüfen, priorisierten Wiederanlauf starten und Fachtest durchführen. Für Zulieferer/Dienstleister: Alternativlieferung, Lagerbestand, Kundenpriorisierung und Eskalation an Leitung."},
+  {id:15, original:true, official:true, title:"Übung 08: Messen der Effektivität des BCMS", pages:"Übung_8.pdf", duration:40, chapter:6,
+    task:"Entwickle zwei Kennzahlen zur Überwachung der Effektivität des BCMS. Fülle je Kennzahl Zweck/Ziel, Messobjekt, Messung, Datenquelle, Interpretation, Berichterstattung und Frequenz aus.",
+    hints:["Eine Kennzahl muss steuerbar sein, nicht nur hübsch aussehen.","Nimm eine Vorsorge-KPI und eine Wirksamkeits-KPI.","Interpretation immer mit Schwellenwert/Handlung verbinden."],
+    solution:"Kennzahl 1 Planaktualität: Zweck Sicherstellung aktueller Notfallpläne; Messobjekt alle freigegebenen Notfallpläne im Scope; Messung Anteil Pläne mit Review innerhalb der letzten 12 Monate in Prozent; Datenquelle Dokumentenlenkung/BCM-Register; Interpretation <90 Prozent = Maßnahmenplan; Reporting monatlich an BCM Manager und quartalsweise Leitung; Frequenz monatlich. Kennzahl 2 Übungswirksamkeit/RTO-Erreichung: Zweck Nachweis, ob Wiederanlaufziele erreichbar sind; Messobjekt Übungen kritischer Prozesse/IT-Services; Messung Anteil Übungen, in denen RTO und definierte Erfolgskriterien erreicht wurden; Datenquelle Übungsprotokolle, Messzeiten, Lessons Learned; Interpretation Nichterreichung = Ursachenanalyse und Korrekturmaßnahme; Reporting an BCM Manager, Prozess-Owner, Leitung; Frequenz nach jeder Übung plus Quartalsauswertung."},
+  {id:16, original:true, official:true, title:"Übung 09: Auditplan", pages:"Übung_9.pdf", duration:45, chapter:8,
+    task:"Führe als externer Auditor ein Audit bei NGA durch. Fokus ISO 22301: Competence 7.2, Awareness 7.3 und Exercise programme 8.5. Erstelle Auditplan und Fragenkatalog für den Business Continuity Manager und Ralf Dickel.",
+    hints:["Frage immer nach Nachweisen, nicht nur nach Meinungen.","BCM Manager = System-/Methodenebene; Ralf Dickel = gelebte Praxis in Produktion/Notfallteam.","Stage-II-Logik: Interviews und Stichproben prüfen Umsetzung."],
+    solution:"Auditplan: Opening Meeting 09:00; Interview BCM Manager zu 7.2 Kompetenzmatrix, Schulungsnachweisen, Rollenbeschreibung, Awareness-Konzept, Übungsprogramm, Protokollen und Maßnahmenverfolgung; Interview Ralf Dickel zu eigener Rolle, erhaltenem Training, Kenntnis von Alarmierung, Notfallplan, Übungen, Lessons Learned und praktischer Umsetzbarkeit; Nachweise: Trainingsmatrix, Teilnehmerlisten, Awareness-Material, Übungsplan, Übungsberichte, offene Maßnahmen, Kompetenznachweise. Fragen BCM Manager: Wie werden Kompetenzen bestimmt? Welche Awareness-Zielgruppen gibt es? Wie wird Wirksamkeit gemessen? Welche Übungen wurden durchgeführt? Fragen Dickel: Welche Rolle haben Sie im Notfallteam? Wann alarmieren Sie? Welche Übung haben Sie absolviert? Wo finden Sie den Plan? Welche Verbesserungen wurden umgesetzt?"}
+);
+
+BCSM_DATA.flashcards.push(...[
+  [8,"Welche drei Bausteine braucht eine Nichtkonformität?","Anforderung, tatsächliche Abweichung und objektiver Nachweis."],
+  [8,"Was prüft Stage I?","Dokumentation, Scope, Auditbereitschaft und grundsätzliche Eignung des BCMS."],
+  [8,"Was prüft Stage II?","Gelebte Umsetzung und Wirksamkeit durch Interviews, Begehung, Stichproben und Aufzeichnungen."],
+  [8,"Was ist 1st-/2nd-/3rd-Party-Audit?","1st = internes Audit, 2nd = Kunde/Partner auditiert, 3rd = unabhängige Zertifizierungsstelle."],
+  [9,"Wann ist eine ITSCM-Kritikalitätsanalyse durchzuführen?","Bei neuem IT-Service, Änderung von RTO/RPO-Anforderungen, Ersatz unterstützender Services oder Rückbau."],
+  [9,"Was ist Ziel der IT-Notfallbewältigung?","Schadensminderung und Sicherstellung operativer Handlungsfähigkeit im IT-Notfall."],
+  [6,"Welche Felder braucht eine gute BCM-Kennzahl?","Zweck, Messobjekt, Messung/Einheit, Datenquelle, Interpretation, Reporting und Frequenz."],
+  [7,"Wie lautet FOR-DEC?","Facts, Options, Risks & Benefits, Decision, Execution, Check."]
+].map((x,i)=>({id:BCSM_DATA.flashcards.length+i+1,chapter:x[0],q:x[1],a:x[2]})));
+
+BCSM_DATA.questions.push(...[
+  [9,"Wann ist laut Probeklausur eine ITSCM-Kritikalitätsanalyse durchzuführen?",["Nur beim Rückbau eines IT-Services","Nur bei Änderung der RTO","Nur bei Beantragung eines neuen IT-Services","Bei Rückbau, RTO-Änderung, neuem Service und Ersatz unterstützender Services"],3,"Die Probeklausur fasst alle genannten Auslöser zusammen."],
+  [1,"Welche Aussage zu RTO und MTPD ist korrekt?",["MBCO ist immer gleich MTPD","RTO ist kleiner oder gleich MTPD","RPO ist immer größer gleich RTO","Alle Aussagen sind richtig"],1,"Der Wiederanlauf muss spätestens vor der maximal tolerierbaren Ausfallgrenze liegen."],
+  [6,"Was muss das Management im Management Review berücksichtigen?",["Rückmeldungen interessierter Parteien","Ergebnisse des Risiko-Assessments","Möglichkeiten kontinuierlicher Verbesserung","Alle genannten Punkte"],3,"Managementreview bewertet Eignung, Angemessenheit und Wirksamkeit mit vielen Inputs."],
+  [3,"Welche Aussage zur Business Continuity Leitlinie ist sicher richtig?",["Sie muss vom Top-Management genehmigt werden","Sie darf nie interessierten Parteien bereitgestellt werden","Sie muss exakt Leitlinie heißen","Sie darf keine Ziele enthalten"],0,"Die Leitlinie braucht Freigabe und Commitment der obersten Leitung."],
+  [5,"Wie lautet die Reihenfolge der Risikoanalyse?",["Identifizieren, Analysieren, Evaluieren, Behandeln","Analysieren, Identifizieren, Behandeln, Evaluieren","Evaluieren, Identifizieren, Analysieren, Behandeln","Behandeln, Evaluieren, Analysieren, Identifizieren"],0,"Diese Reihenfolge ist in der Probeklausur abgefragt."],
+  [9,"Was ist ein typisches Schadensszenario im ITSCM?",["DDoS-Angriff","Identifizierte Anomalie im Benutzerverhalten","Stromausfall","Konsistenzverlust"],0,"Die Probeklausur wertet DDoS als typisches ITSCM-Schadensszenario."],
+  [9,"Welche Aussage zur ITSCM-Kritikalitätsanalyse ist nicht richtig?",["Sequenzielle und parallele Abhängigkeiten sind zu berücksichtigen","Wiederanlaufzeit beginnt erst nach Bearbeitung des Incidents","Sie wird bei neuem IT-Service durchgeführt","Abweichungen zur BIA werden dokumentiert"],1,"Die Aussage zur Wiederanlaufzeit ist in dieser Form falsch."],
+  [4,"Was ist Ziel der BIA?",["Den Prozess vom Ereignis bis zur Wiederherstellung beschreiben","Den Schaden durch Prozessausfälle bestimmen","Auditressourcen planen","Nur IT-Risiken identifizieren"],1,"Die BIA bestimmt Auswirkungen/Schaden im Zeitverlauf und leitet Kritikalität ab."],
+  [5,"Welche Ziele hat die BCM-Risikoanalyse?",["Risiken transparent machen","Strategien/Gegenmaßnahmen ableiten","Szenarien für Notfallpläne identifizieren","Den Schaden durch Prozessausfälle bestimmen"],[0,1,2],"Schadensbestimmung durch Prozessausfälle ist Kern der BIA, nicht der Risikoanalyse."],
+  [9,"Ziel der IT-Notfallbewältigung ist ...",["Schadensminderung","operative Handlungsfähigkeit im IT-Notfall","Steuerung IT-verantwortender Einheiten","Erstellung aller Vorsorgemaßnahmen"],[0,1,2],"Vorsorgemaßnahmen gehören eher zur IT-Notfallvorsorge; Bewältigung ist Reaktion im Ereignis."]
+].map((x,i)=>({id:BCSM_DATA.questions.length+i+1,chapter:x[0],q:x[1],options:x[2],correct:x[3],explanation:x[4],type:Array.isArray(x[3])?"multiple":"single",source:"Prof-Probeklausur"})));

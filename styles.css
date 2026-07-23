@@ -63,7 +63,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .view { padding: 8px clamp(24px, 4vw, 64px) 60px; max-width: 1500px; margin: 0 auto; }
 
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, .75fr); gap: 20px; }
-.hero-card, .panel, .stat-card, .chapter-card, .exercise-card, .glossary-item, .quiz-card, .source-card {
+.hero-card, .panel, .stat-card, .chapter-card, .exercise-card, .glossary-item, .quiz-card, .source-card, .plan-card, .focus-topic {
   background: var(--card); border: 1px solid rgba(16,42,44,.08); border-radius: var(--radius); box-shadow: var(--shadow);
 }
 .hero-card { min-height: 330px; background: var(--ink); color: white; padding: clamp(26px, 4vw, 46px); position: relative; overflow: hidden; }
@@ -98,11 +98,12 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .stat-card .stat-icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 11px; background: var(--paper); }
 .stat-card strong { display: block; font: 600 26px Georgia, serif; margin-top: 18px; }
 .stat-card span { color: var(--muted); font-size: 12px; }
-.action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 .action-card { min-height: 170px; border: 0; border-radius: 20px; padding: 21px; text-align: left; cursor: pointer; position: relative; overflow: hidden; }
 .action-card:nth-child(1) { background: #dcecdf; }
 .action-card:nth-child(2) { background: #f7dfc6; }
 .action-card:nth-child(3) { background: #dbe7ed; }
+.action-card:nth-child(4) { background: #efe0f5; }
 .action-card b { display: block; font: 600 21px Georgia, serif; margin: 28px 0 6px; }
 .action-card small { color: var(--ink-2); }
 .action-card .arrow { position: absolute; right: 18px; top: 16px; font-size: 20px; }
@@ -186,6 +187,25 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 
 .case-hero { background: #dcecdf; padding: clamp(24px, 5vw, 50px); border-radius: 28px; position: relative; overflow: hidden; }
 .case-hero h2 { font: 500 clamp(31px, 5vw, 52px) Georgia, serif; margin: 8px 0; }
+.focus-hero { background: linear-gradient(135deg, #102a2c, #315a53); color: white; padding: clamp(24px, 5vw, 50px); border-radius: 28px; position: relative; overflow: hidden; margin-bottom: 18px; }
+.focus-hero::after { content: ""; position: absolute; inset: auto -70px -120px auto; width: 320px; height: 320px; border-radius: 50%; border: 70px solid rgba(191,227,206,.14); }
+.focus-hero h2 { font: 500 clamp(34px, 6vw, 60px) Georgia, serif; margin: 10px 0; max-width: 780px; }
+.focus-hero p { max-width: 760px; color: rgba(255,255,255,.82); font-size: 17px; line-height: 1.6; }
+.exam-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 16px; margin: 16px 0; }
+.exam-points { display: grid; gap: 10px; }
+.exam-points div { display: grid; grid-template-columns: 76px 1fr; gap: 3px 12px; padding: 12px; border-radius: 14px; background: var(--paper); }
+.exam-points strong { grid-row: span 2; font: 650 25px Georgia, serif; color: var(--mint-strong); }
+.exam-points span { font-weight: 800; }
+.exam-points small { color: var(--muted); }
+.danger-panel { background: #fff1ea; border-color: rgba(167,70,39,.18); }
+.danger-panel li { margin-bottom: 8px; }
+.plan-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+.plan-card { padding: 20px; box-shadow: none; }
+.plan-card h3, .focus-topic h3 { font: 600 22px Georgia, serif; margin: 9px 0; }
+.plan-card p { color: var(--muted); min-height: 48px; }
+.plan-card li, .focus-topic li { margin-bottom: 7px; }
+.focus-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.focus-topic { padding: 20px; display: grid; gap: 8px; box-shadow: none; }
 .case-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 18px; }
 .panel { padding: 22px; box-shadow: none; }
 .fact-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
@@ -226,12 +246,14 @@ body.dark { --paper: #102528; --card: #183437; --ink: #eff4ee; --ink-2: #c9d8d4;
 body.dark .sidebar { background: #08191b; }
 body.dark .hero-card, body.dark .formula { background: #071a1c; }
 body.dark .takeaway, body.dark .solution, body.dark .case-hero, body.dark .action-card { color: #102a2c; }
+body.dark .danger-panel { background: #3a231f; }
 body.dark .notes { background: #122c2f; color: var(--ink); }
 
 @media (max-width: 1050px) {
   .chapter-grid { grid-template-columns: repeat(2, 1fr); }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .case-grid { grid-template-columns: 1fr 1fr; }
+  .action-grid, .plan-grid, .focus-list { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 780px) {
   .app-shell { display: block; }
@@ -243,9 +265,9 @@ body.dark .notes { background: #122c2f; color: var(--ink); }
   .mobile-nav button.active { color: var(--mint-strong); font-weight: 800; }
   .topbar { padding-top: 22px; }
   .topbar h1 { font-size: 31px; }
-  .hero-grid, .lesson-layout, .source-grid { grid-template-columns: 1fr; }
+  .hero-grid, .lesson-layout, .source-grid, .exam-grid { grid-template-columns: 1fr; }
   .lesson-menu { position: static; }
-  .action-grid, .chapter-grid, .exercise-grid, .glossary-list, .case-grid { grid-template-columns: 1fr; }
+  .action-grid, .chapter-grid, .exercise-grid, .glossary-list, .case-grid, .plan-grid, .focus-list { grid-template-columns: 1fr; }
   .manage-grid { grid-template-columns: 1fr; }
   .progress-card { min-height: 280px; }
   .source-card { overflow: hidden; }

@@ -12,7 +12,7 @@
   let cardFlipped = false;
   let quizSession = null;
   let glossaryTerm = "";
-  const PDF_URL = "assets/alles_zu_402.pdf";
+  const DEFAULT_PDF = "alles_zu_402.pdf";
 
   const view = document.getElementById("view");
   const pageTitle = document.getElementById("page-title");
@@ -24,11 +24,23 @@
     catch { return { ...defaultState }; }
   }
   function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); updateStreakUI(); }
-  function pdfHref(page) {
-    return page ? `${PDF_URL}#page=${encodeURIComponent(page)}` : PDF_URL;
+  function parsePdfRef(ref) {
+    const raw = String(ref || "").trim();
+    if (!raw) return { file: DEFAULT_PDF, page: "" };
+    if (raw.includes("|")) {
+      const [file, page] = raw.split("|");
+      return { file: file || DEFAULT_PDF, page: page || "" };
+    }
+    if (raw.toLowerCase().endsWith(".pdf")) return { file: raw, page: "" };
+    return { file: DEFAULT_PDF, page: raw };
   }
-  function openPdf(page) {
-    state.activePdfPage = page || "1";
+  function pdfHref(ref) {
+    const { file, page } = parsePdfRef(ref);
+    const href = `assets/${encodeURIComponent(file).replace(/%2F/g, "/")}`;
+    return page ? `${href}#page=${encodeURIComponent(page)}` : href;
+  }
+  function openPdf(ref) {
+    state.activePdfPage = ref || "1";
     saveState();
     render();
   }
@@ -67,6 +79,7 @@
 
   const titles = {
     dashboard: ["DEIN LERNCOCKPIT", "Heute zählt der nächste Schritt."],
+    focus: ["4 TAGE BIS ZUR PRÜFUNG", "Prof-Fokus, nicht Panik."],
     learn: ["VORLESUNGEN 00–07", "Verstehen, dann erinnern."],
     cards: ["AKTIVES ERINNERN", "Eine Karte nach der anderen."],
     quiz: ["PRÜFUNGSTRAINING", "Wissen unter Druck abrufen."],
@@ -89,24 +102,25 @@
     const [eye, title] = titles[state.route] || titles.dashboard;
     pageEyebrow.textContent = eye; pageTitle.textContent = title;
     document.querySelectorAll("[data-route]").forEach(b => b.classList.toggle("active", b.dataset.route === state.route));
-    const renders = { dashboard: renderDashboard, learn: renderLearn, cards: renderCards, quiz: renderQuiz, exercises: renderExercises, case: renderCase, glossary: renderGlossary, source: renderSource, manage: renderManage };
+    const renders = { dashboard: renderDashboard, focus: renderFocus, learn: renderLearn, cards: renderCards, quiz: renderQuiz, exercises: renderExercises, case: renderCase, glossary: renderGlossary, source: renderSource, manage: renderManage };
     view.innerHTML = (renders[state.route] || renderDashboard)();
     document.getElementById("pdf-viewer")?.remove();
     if (state.activePdfPage) document.body.insertAdjacentHTML("beforeend", renderPdfViewer(state.activePdfPage));
     updateStreakUI();
   }
 
-  function renderPdfViewer(page) {
-    const src = pdfHref(page);
+  function renderPdfViewer(ref) {
+    const info = parsePdfRef(ref);
+    const src = pdfHref(ref);
     return `<div class="pdf-viewer" id="pdf-viewer" role="dialog" aria-label="Originalfolien">
       <div class="pdf-viewer-bar">
-        <div><span class="pill">Originalfolien</span><strong> Seite ${esc(String(page))}</strong></div>
+        <div><span class="pill">Originalfolien</span><strong>${esc(info.file)}${info.page ? ` · Seite ${esc(info.page)}` : ""}</strong></div>
         <div class="button-row">
           <a class="btn btn-secondary" href="${src}" target="_blank" rel="noopener">Falls nötig extern öffnen</a>
           <button class="btn btn-primary" data-close-pdf>Zurück zur App</button>
         </div>
       </div>
-      <iframe class="pdf-frame" src="${src}" title="alles_zu_402.pdf Seite ${esc(String(page))}"></iframe>
+      <iframe class="pdf-frame" src="${src}" title="${esc(info.file)}"></iframe>
     </div>`;
   }
 
@@ -137,10 +151,28 @@
       </div>
       <div class="section-head"><div><h2>Was willst du jetzt schaffen?</h2><p>Drei sinnvolle Einstiege – du entscheidest.</p></div></div>
       <div class="action-grid">
+        <button class="action-card" data-route="focus"><span class="arrow">↗</span><small>4 Tage</small><b>Prüfungsfokus</b><small>Prof-Eingrenzung, Notfallplan und rote Themen.</small></button>
         <button class="action-card" data-route="learn"><span class="arrow">↗</span><small>25–45 Minuten</small><b>Vorlesung lernen</b><small>Kapitelweise mit Checkliste und Quellen.</small></button>
         <button class="action-card" data-route="exercises"><span class="arrow">↗</span><small>30–90 Minuten</small><b>NGA anwenden</b><small>Originalübungen plus Transferfälle.</small></button>
         <button class="action-card" data-start-quiz="10"><span class="arrow">↗</span><small>10 Fragen</small><b>Wissen testen</b><small>Sofortige Erklärungen statt blindem Raten.</small></button>
       </div>`;
+  }
+
+  function renderFocus() {
+    const f = BCSM_DATA.examFocus;
+    if (!f) return `<div class="empty">Noch kein Prüfungsfokus geladen.</div>`;
+    return `<section class="focus-hero"><span class="pill">Prof-Eingrenzung · Stand 14.07.2026</span><h2>${esc(f.title)}</h2><p>${esc(f.subtitle)}</p><div class="button-row"><button class="btn btn-primary" data-open-pdf="EingrenzungThemen-2.pdf">Themeneingrenzung öffnen</button><button class="btn btn-secondary" data-open-pdf="Probeklausur.pdf">Probeklausur öffnen</button><button class="btn btn-warm" data-start-quiz="20">20-Fragen-Simulation</button></div></section>
+      <div class="exam-grid">
+        <article class="panel"><h2>Klausuraufbau</h2><div class="exam-points">${f.examStructure.map(x=>`<div><strong>${esc(x.points)}</strong><span>${esc(x.part)}</span><small>${esc(x.note)}</small></div>`).join("")}</div></article>
+        <article class="panel danger-panel"><h2>Rote Liste</h2><ul>${f.redList.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></article>
+      </div>
+      <div class="section-head"><div><h2>4-Tage-Plan</h2><p>Wenn du wenig Zeit hast: exakt diese Reihenfolge.</p></div></div>
+      <div class="plan-grid">${f.fourDayPlan.map(d=>`<article class="plan-card"><span class="pill">Tag ${d.day}</span><h3>${esc(d.title)}</h3><p>${esc(d.goal)}</p><ul>${d.blocks.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></article>`).join("")}</div>
+      <div class="section-head"><div><h2>Themeneingrenzung vom Prof</h2><p>Alles in Häppchen, damit du nichts übersiehst.</p></div></div>
+      <div class="focus-list">${f.topics.map(t=>`<article class="focus-topic"><div><span class="chapter-number">Kapitel ${String(t.chapter).padStart(2,"0")}</span><h3>${esc(t.title)}</h3></div><ul>${t.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul><button class="btn btn-ghost" data-go-chapter="${t.chapter}">Kapitel lernen</button></article>`).join("")}</div>
+      <div class="section-head"><div><h2>Neue offizielle Aufgaben</h2><p>Übung 6–9 sind jetzt prüfungsnah priorisiert.</p></div></div>
+      <div class="exercise-grid">${f.officialExercises.map(e=>`<article class="exercise-card"><span class="exercise-no">PROF-ÜBUNG ${String(e.id).padStart(2,"0")}</span><h3>${esc(e.title)}</h3><p>${esc(e.focus)}</p><div class="button-row"><button class="btn btn-secondary" data-open-exercise="${e.appExerciseId}">In App bearbeiten</button><button class="btn btn-ghost" data-open-pdf="${esc(e.file)}">Original öffnen</button></div></article>`).join("")}</div>
+      <div class="panel" style="margin-top:16px"><h2>Kollegen-Training</h2><p class="muted">Die Übungsklausuren A/B nutze ich nur als zusätzliche Simulation, nicht als Prof-Quelle.</p><div class="button-row"><button class="btn btn-secondary" data-open-pdf="BCSM402_Uebungsklausur_A.pdf">Klausur A</button><button class="btn btn-secondary" data-open-pdf="BCSM402_Uebungsklausur_A_Musterloesung.pdf">Lösung A</button><button class="btn btn-secondary" data-open-pdf="BCSM402_Uebungsklausur_B.pdf">Klausur B</button><button class="btn btn-secondary" data-open-pdf="BCSM402_Uebungsklausur_B_Musterloesung.pdf">Lösung B</button></div></div>`;
   }
 
   function renderLearn() {
@@ -156,6 +188,7 @@
   function renderChapter(id) {
     const c = chapters().find(x => x.id === Number(id)) || chapters()[0];
     const completed = c.sections.filter((_, i) => state.completedSections.includes(`${c.id}-${i}`)).length;
+    const chapterPdfRef = c.pdf ? `${c.pdf}|${c.pdfPage || 1}` : String(c.pages).split("–")[0];
     return `<button class="btn btn-ghost" data-back-learn>← Alle Kapitel</button>
       <div class="lesson-layout" style="margin-top:16px">
         <aside class="lesson-menu panel"><div style="padding:10px"><span class="chapter-number">KAPITEL ${String(c.id).padStart(2,"0")}</span><h3 style="margin:6px 0">${c.title}</h3><small class="muted">${completed}/${c.sections.length} Einheiten · PDF ${c.pages}</small></div>${c.sections.map((s,i)=>`<button data-scroll-section="lesson-${i}">${i+1}. ${s.title}</button>`).join("")}<button data-route="cards">Passende Karten →</button></aside>
@@ -163,7 +196,7 @@
           <span class="source-ref">Original-PDF Seiten ${c.pages}</span><h2>${c.title}</h2><p class="muted">${c.short}</p>
           <h3>Lernziele</h3><ul>${c.objectives.map(x=>`<li>${x}</li>`).join("")}</ul>
           ${c.sections.map((s,i)=>`<section id="lesson-${i}"><h3>${i+1}. ${s.title}</h3><p>${s.body}</p>${s.bullets ? `<ul>${s.bullets.map(x=>`<li>${x}</li>`).join("")}</ul>` : ""}${s.takeaway ? `<div class="takeaway"><strong>Prüfungsanker</strong><br>${s.takeaway}</div>` : ""}<label class="check-row"><input type="checkbox" data-section-check="${c.id}-${i}" ${state.completedSections.includes(`${c.id}-${i}`) ? "checked" : ""}><span><strong>Das kann ich erklären.</strong><br><small class="muted">Markiere erst, wenn du es ohne Folie in eigenen Worten schaffst.</small></span></label></section>`).join("")}
-          <div class="button-row"><button class="btn btn-primary" data-route="cards">Karteikarten starten</button><button class="btn btn-secondary" data-start-chapter-quiz="${c.id}">Kapitelquiz</button>${c.supplemental || c.custom ? "" : `<button class="btn btn-ghost" data-open-pdf="${c.pages.split("–")[0]}">Originalfolien</button>`}</div>
+          <div class="button-row"><button class="btn btn-primary" data-route="cards">Karteikarten starten</button><button class="btn btn-secondary" data-start-chapter-quiz="${c.id}">Kapitelquiz</button>${c.custom ? "" : `<button class="btn btn-ghost" data-open-pdf="${chapterPdfRef}">Originalfolien</button>`}</div>
         </article>
       </div>`;
   }
@@ -249,7 +282,8 @@
   }
 
   function renderSource() {
-    return `<div class="source-grid"><article class="source-card"><span class="pill">OFFLINE IN DER APP</span><h2>alles_zu_402.pdf</h2><p>Die vollständige 564-seitige Sammel-PDF ist lokal eingebunden. Öffne sie im Browser und springe anhand der Karte direkt zum relevanten Block.</p><div class="button-row"><a class="btn btn-primary" href="assets/alles_zu_402.pdf" target="_blank">Gesamte PDF öffnen ↗</a><button class="btn btn-secondary" data-open-pdf="528">NGA & Übungen</button></div><p class="muted"><small>Die Lernapp fasst prüfungsrelevante Inhalte zusammen. Bei Detailfragen bleiben die Originalfolien die verbindliche Quelle.</small></p></article><article class="source-card"><h2>Seitenkarte</h2><div class="page-map">${chapters().map(c=>`<div><span>Kapitel ${String(c.id).padStart(2,"0")} · ${c.title}</span>${c.custom ? `<span class="pill">eigener Inhalt</span>` : c.supplemental ? `<span class="pill">Prüfungsergänzung</span>` : `<button class="text-button" style="color:var(--mint-strong)" data-open-pdf="${c.pages.split("–")[0]}">${c.pages} ↗</button>`}</div>`).join("")}<div><span>NGA-Fallstudie</span><button class="text-button" style="color:var(--mint-strong)" data-open-pdf="528">528–530 ↗</button></div><div><span>Übungen & Vorlagen</span><button class="text-button" style="color:var(--mint-strong)" data-open-pdf="531">531–563 ↗</button></div></div></article></div>
+    const extraSources = BCSM_DATA.sourceFiles || [];
+    return `<div class="source-grid"><article class="source-card"><span class="pill">IN DER APP</span><h2>Originalunterlagen</h2><p>Die komplette Sammel-PDF plus neue Prof-Unterlagen sind eingebunden. Du kannst sie direkt im App-Viewer öffnen.</p><div class="button-row"><button class="btn btn-primary" data-open-pdf="alles_zu_402.pdf">Gesamte PDF öffnen</button><button class="btn btn-secondary" data-open-pdf="EingrenzungThemen-2.pdf">Themeneingrenzung</button><button class="btn btn-warm" data-open-pdf="Probeklausur.pdf">Probeklausur</button></div><p class="muted"><small>Prof-Quellen sind als Prüfungsfokus markiert. Die zwei Übungsklausuren A/B sind als Kollegen-Training gekennzeichnet.</small></p></article><article class="source-card"><h2>Seitenkarte</h2><div class="page-map">${chapters().map(c=>`<div><span>Kapitel ${String(c.id).padStart(2,"0")} · ${c.title}</span>${c.custom ? `<span class="pill">eigener Inhalt</span>` : c.pdf ? `<button class="text-button" style="color:var(--mint-strong)" data-open-pdf="${c.pdf}|${c.pdfPage || 1}">${c.pdf} ↗</button>` : `<button class="text-button" style="color:var(--mint-strong)" data-open-pdf="${String(c.pages).split("–")[0]}">${c.pages} ↗</button>`}</div>`).join("")}<div><span>NGA-Fallstudie</span><button class="text-button" style="color:var(--mint-strong)" data-open-pdf="528">528–530 ↗</button></div><div><span>Übungen & Vorlagen</span><button class="text-button" style="color:var(--mint-strong)" data-open-pdf="531">531–563 ↗</button></div>${extraSources.map(s=>`<div><span>${esc(s.title)}</span><button class="text-button" style="color:var(--mint-strong)" data-open-pdf="${esc(s.file)}">${esc(s.badge || "öffnen")} ↗</button></div>`).join("")}</div></article></div>
       <div class="panel" style="margin-top:16px"><h2>Deine Lerndaten</h2><p class="muted">Fortschritt, Notizen, Wiederholungen und Quizwerte bleiben ausschließlich in deinem Browser.</p><div class="button-row"><button class="btn btn-secondary" id="export-progress-inline">Fortschritt als Datei sichern</button><button class="btn btn-primary" data-route="manage">Inhalte hinzufügen</button><button class="btn btn-danger" id="reset-progress">Lerndaten zurücksetzen</button></div></div>`;
   }
 
@@ -336,7 +370,7 @@
     }
     if (e.target.closest("[data-retry-quiz]")) { const n = quizSession?.questions.length || 10, ch = quizSession?.chapter ?? null; startQuiz(n, ch); return; }
     const ex = e.target.closest("[data-open-exercise]");
-    if (ex) { state.activeExercise = Number(ex.dataset.openExercise); saveState(); render(); return; }
+    if (ex) { state.route = "exercises"; state.activeExercise = Number(ex.dataset.openExercise); saveState(); render(); return; }
     if (e.target.closest("[data-back-exercises]")) { state.activeExercise = null; saveState(); render(); return; }
     const save = e.target.closest("[data-save-exercise]");
     if (save) {
